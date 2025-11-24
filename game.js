@@ -16,7 +16,6 @@ const startButton = document.getElementById("startButton");
 startButton.addEventListener("click", () => {
   gameStarted = true;
   startScreen.style.display = "none";
-  // Oyuncu başlangıç pozisyonunu ortala
   player.x = canvas.width / 2;
   player.y = canvas.height / 2;
   gameLoop();
@@ -41,6 +40,27 @@ const player = {
 const keys = {};
 document.addEventListener("keydown", e => keys[e.key] = true);
 document.addEventListener("keyup", e => keys[e.key] = false);
+
+// MOBİL DOKUNMATİK KONTROL
+let touchX = null;
+let touchY = null;
+
+canvas.addEventListener("touchstart", (e) => {
+  const touch = e.touches[0];
+  touchX = touch.clientX;
+  touchY = touch.clientY;
+});
+
+canvas.addEventListener("touchmove", (e) => {
+  const touch = e.touches[0];
+  touchX = touch.clientX;
+  touchY = touch.clientY;
+});
+
+canvas.addEventListener("touchend", () => {
+  touchX = null;
+  touchY = null;
+});
 
 // ENEMIES
 const enemies = [];
@@ -212,10 +232,20 @@ function drawBullets() {
 function updatePlayer() {
   player.vx = 0;
   player.vy = 0;
+
+  // Klavye kontrolleri
   if (keys["w"] || keys["ArrowUp"]) player.vy = -player.speed;
   if (keys["s"] || keys["ArrowDown"]) player.vy = player.speed;
   if (keys["a"] || keys["ArrowLeft"]) player.vx = -player.speed;
   if (keys["d"] || keys["ArrowRight"]) player.vx = player.speed;
+
+  // Dokunmatik kontroller
+  if (touchX !== null && touchY !== null) {
+    const dx = touchX - player.x;
+    const dy = touchY - player.y;
+    player.vx = Math.sign(dx) * player.speed;
+    player.vy = Math.sign(dy) * player.speed;
+  }
 
   player.x += player.vx;
   player.y += player.vy;
