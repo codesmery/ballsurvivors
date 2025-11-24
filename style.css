@@ -28,8 +28,9 @@ canvas {
 }
 
 #startButton {
-  font-size: 24px;
-  padding: 10px 20px;
+  font-size: 32px;
+  padding: 15px 30px;
   margin-top: 20px;
   cursor: pointer;
+  touch-action: manipulation;
 }
